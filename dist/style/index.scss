@@ -1,0 +1,107 @@
+.clear {
+  zoom: 1;
+}
+
+.clear:after {
+  content: '';
+  font-size: 0;
+  height: 0;
+  display: block;
+  clear: both;
+}
+
+section.demo {
+  box-sizing: border-box;
+  margin: 30px auto;
+  transition-duration: 0.3s;
+  color: #fff;
+  .item {
+    float: left;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
+section.demo:hover {
+  box-shadow: 0px 0px 20px orange;
+}
+
+.middle {
+  width: 100%;
+}
+
+.middle .content {
+  background-color: #393581;
+}
+
+.left {
+  background-color: #5e5999;
+  width: 150px;
+}
+
+.right {
+  background-color: #584dcd;
+  width: 150px;
+}
+
+.demo0 {
+  .content {
+    margin-left: 150px;
+  }
+  .left {
+    margin-left: -100%;
+  }
+}
+
+.demo0 .demo1 .content {
+  margin-right: 150px;
+}
+
+.demo1 .right {
+  margin-left: -150px;
+}
+
+.demo2 .content {
+  margin-right: 150px;
+  margin-left: 150px;
+}
+
+.demo2 .left {
+  margin-left: -100%;
+}
+
+.demo2 .right {
+  margin-left: -150px;
+}
+
+.demo3 .content {
+  margin-left: 300px;
+}
+
+.demo3 .left {
+  margin-left: -100%;
+}
+
+.demo3 .left2 {
+  position: relative;
+  left: 150px;
+}
+
+.demo4 .content {
+  margin-right: 300px;
+}
+
+.demo4 .right {
+  margin-left: -300px;
+}
+
+.demo4 .right2 {
+  position: relative;
+  left: 150px;
+}
+
+.pull-request {
+  border-bottom: 2px solid red;
+}

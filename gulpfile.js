@@ -6,6 +6,10 @@ var path = require('path');
 var gulp = require('gulp');
 
 
+//html
+var minifyHtml = require('gulp-minify-html');
+var htmlmin = require('gulp-htmlmin');
+
 // css
 var less = require('gulp-less');
 var sass = require('gulp-sass');
@@ -15,9 +19,11 @@ var minifycss = require('gulp-minify-css'); //压缩css文件
 var cssbeautify = require('gulp-cssbeautify'); //美化css样式
 var rename = require('gulp-rename'); //重命名
 
-//html
-var minifyHtml = require('gulp-minify-html');
-var htmlmin = require('gulp-htmlmin');
+// js
+var jshint = require('gulp-jshint'); //监测 js 语法
+var uglify = require('gulp-uglify'); //uglify 组件（用于压缩 JS）
+var concat = require('gulp-concat'); //合并
+
 
 // 自动刷新
 var browserSync = require('browser-sync').create();
@@ -67,11 +73,30 @@ gulp.task('cssTest', function() {
     .pipe(gulp.dest('bulid/css'))
 })
 
+//合并js
+gulp.task('concatjs', function() {
+  gulp.src('dist/js/*.js') //输入
+    .pipe(jshint())
+    .pipe(concat('main.js')) //合并
+    .pipe(uglify())
+    .pipe(gulp.dest('bulid/js')) //输出
+})
+
+//压缩js
+gulp.task('libjs', function() {
+  gulp.src('dist/js/lib/*.js') //输入
+    .pipe(uglify())
+    .pipe(gulp.dest('bulid/js/lib'))
+})
+
+
 // 静态服务 设置要监听的目录文件
 gulp.task('server', function() {
   var files = [
     './bulid/**/*.html',
-    './bulid/**/*.css'
+    './bulid/**/*.css',
+    './bulid/js/*.js', //'./dist/**/*.js'
+    './bulid/js/lib/*.js' //'./dist/js/**/*.js'
   ]
   browserSync.init(files, {
     server: {
@@ -85,9 +110,11 @@ gulp.task('server', function() {
 gulp.task('watch', function() {
   gulp.watch('./*.html', ['htmlTest']);
   gulp.watch('dist/style/*.scss', ['cssTest']);
+  gulp.watch('dist/js/*.js', ['concatjs']);
+  gulp.watch('dist/js/lib/*.js', ['libjs']);
 })
 
 //默认执行
 gulp.task('default', function() {
-  gulp.run('server', 'htmlTest', 'cssTest', 'watch')
+  gulp.run('server', 'htmlTest', 'cssTest', 'concatjs', 'libjs', 'watch')
 })

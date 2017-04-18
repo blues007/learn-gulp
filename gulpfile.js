@@ -24,6 +24,9 @@ var jshint = require('gulp-jshint'); //监测 js 语法
 var uglify = require('gulp-uglify'); //uglify 组件（用于压缩 JS）
 var concat = require('gulp-concat'); //合并
 
+//图片
+var imagemin = require('gulp-imagemin'); //图片压缩
+var pngquant = require('imagemin-pngquant'); //png图片压缩插件
 
 // 自动刷新
 var browserSync = require('browser-sync').create();
@@ -89,6 +92,16 @@ gulp.task('libjs', function() {
     .pipe(gulp.dest('bulid/js/lib'))
 })
 
+//图片
+gulp.task('imageTest', function() {
+  gulp.src('dist/images/*.{png,jpg,gif,ico}') // .{}中的多个项中间不要加空格
+    .pipe(imagemin({
+      progressive: true,
+      use: [pngquant()] //使用pngquant来压缩png图片
+    }))
+    .pipe(gulp.dest('bulid/images'))
+})
+
 
 // 静态服务 设置要监听的目录文件
 gulp.task('server', function() {
@@ -96,7 +109,8 @@ gulp.task('server', function() {
     './bulid/**/*.html',
     './bulid/**/*.css',
     './bulid/js/*.js', //'./dist/**/*.js'
-    './bulid/js/lib/*.js' //'./dist/js/**/*.js'
+    './bulid/js/lib/*.js', //'./dist/js/**/*.js'
+    './bulid/**/*.{png,jpg,gif,ico}'
   ]
   browserSync.init(files, {
     server: {
@@ -112,9 +126,10 @@ gulp.task('watch', function() {
   gulp.watch('dist/style/*.scss', ['cssTest']);
   gulp.watch('dist/js/*.js', ['concatjs']);
   gulp.watch('dist/js/lib/*.js', ['libjs']);
+  gulp.watch('dist/images/*', ['imageTest']);
 })
 
 //默认执行
 gulp.task('default', function() {
-  gulp.run('server', 'htmlTest', 'cssTest', 'concatjs', 'libjs', 'watch')
+  gulp.run('server', 'htmlTest', 'cssTest', 'concatjs', 'libjs', 'imageTest', 'watch')
 })

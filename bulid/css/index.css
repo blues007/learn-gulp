@@ -21,3 +21,4 @@ section.demo:hover{-webkit-box-shadow:0 0 20px orange;box-shadow:0 0 20px orange
 .demo4 .right{margin-left:-300px}
 .demo4 .right2{position:relative;left:150px}
 .pull-request{border-bottom:2px solid red}
+.flex-bot img{width:230px}

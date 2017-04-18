@@ -15,12 +15,33 @@ var minifycss = require('gulp-minify-css'); //压缩css文件
 var cssbeautify = require('gulp-cssbeautify'); //美化css样式
 var rename = require('gulp-rename'); //重命名
 
+//html
+var minifyHtml = require('gulp-minify-html');
+var htmlmin = require('gulp-htmlmin');
+
 // 自动刷新
 var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
 
 var foreach = require('gulp-foreach');
 
+
+//html
+gulp.task('htmlTest', function() {
+  var options = {
+    removeComments: true, //清除HTML注释
+    collapseWhitespace: true, //压缩HTML
+    collapseBooleanAttributes: true, //省略布尔属性的值 <input checked="true"/> ==> <input />
+    removeEmptyAttributes: true, //删除所有空格作属性值 <input id="" /> ==> <input />
+    removeScriptTypeAttributes: true, //删除<script>的type="text/javascript"
+    removeStyleLinkTypeAttributes: true, //删除<style>和<link>的type="text/css"
+    minifyJS: true, //压缩页面JS
+    minifyCSS: true //压缩页面CSS
+  };
+  gulp.src('./*.html') // 要压缩的html文件
+    .pipe(htmlmin(options))
+    .pipe(gulp.dest('bulid/html'))
+})
 
 //编译sass
 gulp.task('cssTest', function() {
@@ -48,7 +69,8 @@ gulp.task('cssTest', function() {
 
 // 静态服务 设置要监听的目录文件
 gulp.task('server', function() {
-  var files = [,
+  var files = [
+    './bulid/**/*.html',
     './bulid/**/*.css'
   ]
   browserSync.init(files, {
@@ -56,14 +78,16 @@ gulp.task('server', function() {
       baseDir: './'
     }
   })
+  gulp.watch('*.html').on('change', reload); // html刷新
 })
 
 //监听任务
 gulp.task('watch', function() {
+  gulp.watch('./*.html', ['htmlTest']);
   gulp.watch('dist/style/*.scss', ['cssTest']);
 })
 
 //默认执行
 gulp.task('default', function() {
-  gulp.run('server', 'cssTest', 'watch')
+  gulp.run('server', 'htmlTest', 'cssTest', 'watch')
 })

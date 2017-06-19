@@ -1,2 +1,2 @@
-# learn-gulp-dqq
+# learn-gulp
 learn gulp
